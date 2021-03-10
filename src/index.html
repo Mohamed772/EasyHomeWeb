@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<title>EasyHome</title>
+		<meta charset="utf-8" />
+		<script src="src/main.js"></script>
+
+		<link
+			rel="stylesheet"
+			href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+		/>
+		<link
+			rel="stylesheet"
+			href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"
+		/>
+		<link
+			rel="stylesheet"
+			href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css"
+		/>
+		<link
+			rel="stylesheet"
+			href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css"
+		/>
+
+		<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+		<script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
+		<script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+		<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+	</head>
+	<body>
+		<p id="demo">Cliquer pour Pour revcentrer sur vous.</p>
+		<button onclick="getLocation()">Cliquer</button>
+		<div style="height: 50vh; width: 100vw" id="mapid"></div>
+	</body>
+</html>
