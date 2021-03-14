@@ -1,0 +1,52 @@
+body {
+	overflow: hidden;
+}
+
+#mapid {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100vh;
+	width: 100vw;
+	z-index: -1;
+}
+
+#center {
+	background-color: white;
+	border-radius: 10px;
+	padding: 10px;
+	width: fit-content;
+	margin: auto;
+	margin-top: 20px;
+	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.sidebar {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	bottom: 20px;
+	width: 20%;
+	z-index: 2;
+	background-color: white;
+	border-radius: 14px;
+	transition: all 0.5s ease-out 0s;
+	transform: translateX(110%);
+}
+.active {
+	transform: translateX(0);
+}
+
+#sidebar-btn {
+	outline: none;
+}
+
+#showMenu-btn {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+}

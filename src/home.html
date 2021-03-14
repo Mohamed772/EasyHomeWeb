@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<title>EasyHome</title>
+		<meta charset="utf-8" />
+		<link rel="stylesheet" href="/reset.css" />
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+		<!-- prettier-ignore -->
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+		<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+		<!-- Load Esri Leaflet from CDN -->
+		<script src="https://unpkg.com/esri-leaflet"></script>
+
+		<!-- prettier-ignore -->
+		<link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder/dist/esri-leaflet-geocoder.css" />
+		<script src="https://unpkg.com/esri-leaflet-geocoder"></script>
+
+		<script src="/home.js"></script>
+		<link rel="stylesheet" href="/home.css" />
+	</head>
+	<body>
+		<div id="mapid"></div>
+		<button id="showMenu-btn">=</button>
+		<div class="sidebar">
+			<button id="sidebar-btn">X</button>
+		</div>
+		<div id="center">
+			<p id="text">Cliquez pour recentrer sur vous.</p>
+			<button id="center-me">Cliquer</button>
+		</div>
+	</body>
+</html>

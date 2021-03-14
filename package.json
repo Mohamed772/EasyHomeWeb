@@ -1,28 +1,21 @@
 {
-  "name": "easyhomeweb",
-  "version": "1.0.0",
-  "description": "",
-  "main": "src/index.js",
-  "scripts": {
-    "start": "node src/app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Mohamed772/EasyHomeWeb.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Mohamed772/EasyHomeWeb/issues"
-  },
-  "homepage": "https://github.com/Mohamed772/EasyHomeWeb#readme",
-  "dependencies": {
-    "autoprefixer": "^10.2.5",
-    "express": "^4.17.1",
-    "jquery": "^3.6.0",
-    "leaflet": "^1.7.1",
-    "postcss": "^8.2.8",
-    "tailwindcss": "^2.0.3"
-  }
+	"name": "easyhomeweb",
+	"version": "1.0.0",
+	"description": "",
+	"main": "src/index.js",
+	"scripts": {
+		"start": "node app.js",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"autoprefixer": "^10.2.5",
+		"express": "^4.17.1",
+		"jquery": "^3.6.0",
+		"leaflet": "^1.7.1",
+		"morgan": "^1.10.0",
+		"postcss": "^8.2.8",
+		"tailwindcss": "^2.0.3"
+	}
 }
