@@ -1,5 +1,12 @@
 body {
 	overflow: hidden;
+	width: 0;
+	height: 0;
+}
+
+::-webkit-scrollbar {
+	width: 0;  /* Remove scrollbar space */
+	background: transparent;  /* Optional: just make scrollbar invisible */
 }
 
 #mapid {
@@ -36,6 +43,7 @@ body {
 	border-radius: 14px;
 	transition: all 0.5s ease-out 0s;
 	transform: translateX(110%);
+	overflow: hidden;
 }
 .active {
 	transform: translateX(0);
@@ -43,10 +51,50 @@ body {
 
 #sidebar-btn {
 	outline: none;
+	position: absolute;
+	top: 0;
+	right: 0;
 }
 
 #showMenu-btn {
 	position: absolute;
 	top: 20px;
 	right: 20px;
+}
+
+.advert {
+	background-color: white;
+	width: 300px;
+}
+
+.advert-specifics {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	align-items: center;
+}
+
+.advert-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+#criteres-form {
+	padding: 15px;
+	width: 100%;
+	height: 100%;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	display: flex;
+	flex-direction: column;
+}
+
+.separator {
+	border-top: 1px solid black;
+	margin: 25px 10px;
+}
+
+#criteres-form h2 {
+	margin-bottom: 20px;
 }
