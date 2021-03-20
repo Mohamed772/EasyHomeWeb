@@ -33,68 +33,83 @@
 		<div class="sidebar">
 			<button id="sidebar-btn">X</button>
 			<form id="criteres-form">
-				
 				<h2>Localisation</h2>
 				<div class="mb-3 row">
 					<div class="col-sm-10">
-						<input type="text" class="form-control" id="postal_codes"/>
+						<input type="text" class="form-control" id="postal_codes" />
 					</div>
 				</div>
 				<div class="separator"></div>
 
 				<h2>Budget</h2>
 				<div class="mb-3 row justify-content-between">
-					<label for="price_min" class="col-sm-auto col-form-label">Prix minumum</label>
+					<label for="price_min" class="col-sm-auto col-form-label">
+						Prix minumum
+					</label>
 					<div class="col-sm-auto">
-						<input type="number" class="form-control" id="price_min" min=0 />
+						<input type="number" class="form-control" id="price_min" min="0" />
 					</div>
 				</div>
 
 				<div class="mb-3 row justify-content-between">
-					<label for="price_max" class="col-sm-auto col-form-label">Prix maximum</label>
+					<label for="price_max" class="col-sm-auto col-form-label">
+						Prix maximum
+					</label>
 					<div class="col-sm-auto">
-						<input type="number" class="form-control" id="price_max" min=0 />
+						<input type="number" class="form-control" id="price_max" min="0" />
 					</div>
 				</div>
 				<div class="separator"></div>
 
 				<h2>Surface</h2>
 				<div class="mb-3 row justify-content-between">
-					<label for="price_min" class="col-sm-auto col-form-label">Surface minimum</label>
+					<label for="area_min" class="col-sm-auto col-form-label">
+						Surface minimum
+					</label>
 					<div class="col-sm-auto">
-						<input type="number" class="form-control" id="price_min" min=0 />
+						<input type="number" class="form-control" id="area_min" min="0" />
 					</div>
 				</div>
 
 				<div class="mb-3 row justify-content-between">
-					<label for="price_max" class="col-sm-auto col-form-label">Surface maximum</label>
+					<label for="area_max" class="col-sm-auto col-form-label">
+						Surface maximum
+					</label>
 					<div class="col-sm-auto">
-						<input type="number" class="form-control" id="price_max" min=0 />
+						<input type="number" class="form-control" id="area_max" min="0" />
 					</div>
 				</div>
 				<div class="separator"></div>
 
 				<h2>Caracteristiques</h2>
 				<div class="mb-3 row justify-content-between">
-					<label for="rooms" class="col-sm-auto col-form-label">Nombre de pieces</label>
+					<label for="rooms" class="col-sm-auto col-form-label">
+						Nombre de pieces
+					</label>
 					<div class="col-sm-auto">
-						<input type="number" class="form-control" id="rooms" min=0 />
+						<input type="number" class="form-control" id="rooms" min="0" />
 					</div>
 				</div>
 				<div class="separator"></div>
 
 				<h2>Type de bien</h2>
 				<div class="form-check">
-					<label class="form-check-label" for="Apartment">
-						Appartement
-					</label>
-					<input class="form-check-input" type="checkbox" value="Apartment" id="Apartment">
+					<label class="form-check-label" for="Apartment"> Appartement </label>
+					<input
+						class="form-check-input"
+						type="checkbox"
+						value="Apartment"
+						id="Apartment"
+					/>
 				</div>
 				<div class="form-check">
-					<label class="form-check-label" for="inputHouse">
-						Maison
-					</label>
-					<input class="form-check-input" type="checkbox" value="House" id="House">
+					<label class="form-check-label" for="inputHouse"> Maison </label>
+					<input
+						class="form-check-input"
+						type="checkbox"
+						value="House"
+						id="House"
+					/>
 				</div>
 				<div class="separator"></div>
 

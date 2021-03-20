@@ -1,3 +1,7 @@
+const numberWithSpaces = (x) => {
+	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+};
+
 function timeSince(date) {
 	var seconds = Math.floor((new Date() - date) / 1000);
 
