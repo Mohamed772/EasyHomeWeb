@@ -17,8 +17,14 @@ const TILE_CONFIG = {
 	},
 };
 const DEFAULT_IMAGE =
-	"https://www.google.com/url?sa=i&url=https%3A%2F%2Fgrandblancview.mihomepaper.com%2Farticles%2Fmcgrath-property-gets-name-change-now-called-perry-house%2F&psig=AOvVaw1SQzmUw24vOrghMa2m_sXr&ust=1616321657618000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCIinqcTRvu8CFQAAAAAdAAAAABAD";
+	"https://grandblancview.mihomepaper.com/wp-content/themes/dolores/assets/img/default.jpg";
+const randomDecalage = () => {
+	let number = Math.random() * (Math.random() > 0.5 ? 1 : -1);
+	return (number * Math.pow(10, -4)) / 2;
+};
 let map;
+
+let markers;
 
 const showMenu = () => {
 	const menuButton = $("#showMenu-btn");
@@ -39,7 +45,7 @@ const apiUrl = "https://api.fluximmo.com/v1/adverts/search";
 let adverts = [];
 
 const clearAdverts = () => {
-	// TODO
+	markers.clearLayers();
 };
 
 const createCarousel = (images) => {
@@ -68,7 +74,7 @@ const createCarousel = (images) => {
 };
 
 const createInfos = (advertInfos) => {
-	const prix = $(`<p>${numberWithSpaces(advertInfos.price)} $</p>`);
+	const prix = $(`<p>${numberWithSpaces(advertInfos.price)} €</p>`);
 	const location = $(`<p>${advertInfos.city} (${advertInfos.postal_code})</p>`);
 	const specifics = $(
 		`<div class='advert-specifics'><p>${advertInfos.rooms} pieces</p><p>${
@@ -106,10 +112,12 @@ const initAdverts = () => {
 	let pos = [0, 0];
 	for (let advert of adverts) {
 		if (advert.latitude !== null && advert.longitude !== null) {
-			// TODO empecher le chevauchement (2 marker a la meme location, indifferentiable)
-			L.marker([advert.latitude, advert.longitude])
+			L.marker([
+				advert.latitude + randomDecalage(),
+				advert.longitude + randomDecalage(),
+			])
 				.bindPopup(createAdvertCard(advert).html())
-				.addTo(map);
+				.addTo(markers);
 			pos[0] += advert.latitude;
 			pos[1] += advert.longitude;
 			i++;
@@ -148,35 +156,37 @@ const testApi = async () => {
 const updateAdverts = (data) => {
 	const settings = {
 		url: apiUrl,
-		method: 'GET',
-		dataType: 'json',
+		method: "GET",
+		dataType: "json",
 		data: data,
 		headers: {
-			'X-API-KEY': 'DUTSTUDENT_pgTrnSMIW7',
+			"X-API-KEY": "DUTSTUDENT_pgTrnSMIW7",
 		},
 	};
 	$.ajax(settings).done((res) => {
 		adverts = res.adverts;
 		console.log(adverts);
 		initAdverts();
-	})
-}
+	});
+};
 
 const handleFormSubmit = (e) => {
 	e.preventDefault();
 	const inputs = $("input");
 	console.log(inputs);
 	data = {};
-	propType = [];
+	types = { search_type: [], property_type: [] };
 	inputs.each((i) => {
-		// TODO cas null
 		const curInput = inputs.eq(i);
-		if (curInput.attr('type') === 'checkbox') {
-			if (curInput[0].checked) propType.push(curInput.val());
-		}
-		else data[curInput.attr("id")] = curInput.val();
+		if (curInput.attr("type") === "checkbox") {
+			if (curInput[0].checked) types[curInput.val()].push(curInput.attr("id"));
+		} else if (curInput.val() !== "")
+			data[curInput.attr("id")] = curInput.val();
 	});
-	if (propType.length === 1) data['search_type'] = propType[0];
+	if (types.search_type.length === 1)
+		data["search_type"] = types.search_type[0];
+	if (types.property_type.length === 1)
+		data["property_type"] = types.property_type[0];
 	console.log(data);
 	updateAdverts(data);
 };
@@ -186,6 +196,7 @@ $(document).ready(() => {
 	const tiles = L.tileLayer(TILE_CONFIG.url, TILE_CONFIG.attribution).addTo(
 		map
 	);
+	markers = L.layerGroup().addTo(map);
 
 	$("#center-me").on("click", testApi);
 
