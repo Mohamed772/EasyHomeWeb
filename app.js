@@ -4,6 +4,7 @@ const fs = require("fs");
 const morgan = require("morgan");
 var nodemailer = require("nodemailer");
 const bodyParser = require('body-parser');
+const { hostname } = require("os");
 
 const PORT = 3000;
 
@@ -16,7 +17,6 @@ app.get("/", (req, res) => {
 });
 
 app.post("/sendEmail", (req, res) => {
-	console.log(req.body);
 	const email = req.body.email;
 	const data = req.body.data;
 	let transporter = nodemailer.createTransport({
@@ -31,7 +31,7 @@ app.post("/sendEmail", (req, res) => {
 		from: "easyhome.gang@gmail.com",
 		to: email,
 		subject: "Your search on easyHome.com !",
-		text: `Here is a link to open your search again: http://localhost:3000/?save=${data}`,
+		text: `Here is a link to open your search again: http://${req.hostname}/?save=${data}`,
 	};
 
 	transporter.sendMail(mailOptions, (err, info) => {

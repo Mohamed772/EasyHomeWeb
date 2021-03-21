@@ -117,7 +117,7 @@ const createAdvertCard = (advert, i) => {
 	const carousel = createCarousel(advert.images_url);
 	const infos = createInfos(advert);
 	const homeRouting = $(
-		`<div style="align-self: center;"> <a id="${i}" class="btn btn-warning advert-routing">Home</a> </div>`
+		`<div style="align-self: center;"> <a id="${i}" class="btn btn-warning advert-routing">Work</a> </div>`
 	);
 	const main = $('<div class="advert"></div>')
 		.append(topInfos)
@@ -151,31 +151,6 @@ const initAdverts = () => {
 	map.setView([pos[0], pos[1] + 0.008], 15);
 };
 
-const testApi = async () => {
-	let resData = {};
-	let data = {
-		postal_codes: 75002,
-		price_max: 500000,
-		area_max: 100,
-		search_type: "buy",
-	};
-	let settings = {
-		url: apiUrl,
-		method: "GET",
-		dataType: "json",
-		data: data,
-		headers: {
-			"X-API-KEY": "DUTSTUDENT_pgTrnSMIW7",
-		},
-	};
-
-	const test = $.ajax(settings).done((res) => {
-		adverts = res.adverts;
-		console.log(adverts);
-		initAdverts();
-	});
-};
-
 const updateAdverts = (data) => {
 	const settings = {
 		url: apiUrl,
@@ -190,7 +165,7 @@ const updateAdverts = (data) => {
 		adverts = res.adverts;
 		console.log(adverts);
 		initAdverts();
-		$(".advert-routing").on("click", routeFromHome);
+		$(".advert-routing").on("click", routeFromWork);
 	});
 };
 
@@ -216,7 +191,7 @@ const handleFormSubmit = (e) => {
 	updateAdverts(searchData);
 };
 
-const routeFromHome = (e) => {
+const routeFromWork = (e) => {
 	if (workMarker === null) return;
 	if (routingControl !== null) map.removeControl(routingControl);
 	const button = $(e.target);
@@ -251,7 +226,7 @@ const save = (e) => {
 const sendEmail = (email, data) => {
 	console.log(email, data);
 	const settings = {
-		url: "http://localhost:3000/sendEmail",
+		url: window.location.origin + "/sendEmail",
 		method: "POST",
 		data: { email: email, data: data },
 	};
@@ -280,27 +255,31 @@ const loadSave = (layer) => {
 	}
 	if (data.searchData !== null) {
 		updateAdverts(data.searchData);
-		for (let field in data.searchData){
+		for (let field in data.searchData) {
 			$(`#${field}`).val(data.searchData[field]);
 		}
-		
+
 		if (data.searchData.property_type) {
-			const inputs = $('.propertyType-check')
-			inputs.each((i) => {inputs[i].checked = false;})
+			const inputs = $(".propertyType-check");
+			inputs.each((i) => {
+				inputs[i].checked = false;
+			});
 			$(`#${data.searchData.property_type}`)[0].checked = true;
 		}
 		if (data.searchData.search_type) {
-			const inputs = $('.searchType-check')
-			inputs.each((i) => {inputs[i].checked = false;})
+			const inputs = $(".searchType-check");
+			inputs.each((i) => {
+				inputs[i].checked = false;
+			});
 			$(`#${data.searchData.search_type}`)[0].checked = true;
 		}
 	}
-}
+};
 
 const setWorkMarker = (layer, marker) => {
 	layer.clearLayers();
 	layer.addLayer(marker);
-}
+};
 
 $(document).ready(() => {
 	map = L.map("mapid").setView([ORIGIN.lat, ORIGIN.long], ZOOM_LEVEL);
@@ -312,7 +291,7 @@ $(document).ready(() => {
 	let searchControl = L.esri.Geocoding.geosearch({
 		providers: [arcgisOnline],
 	}).addTo(map);
-	
+
 	let workLayer = L.layerGroup().addTo(map);
 
 	searchControl.on("results", (data) => {
@@ -322,10 +301,8 @@ $(document).ready(() => {
 	});
 
 	map.on("popupopen", (e) => {
-		$(".advert-routing").on("click", routeFromHome);
+		$(".advert-routing").on("click", routeFromWork);
 	});
-
-	$("#center-me").on("click", testApi);
 
 	$("#showMenu-btn").on("click", showMenu);
 	$("#sidebar-btn").on("click", hideMenu);
