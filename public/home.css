@@ -66,6 +66,8 @@ body {
 .advert {
   background-color: white;
   width: 300px;
+  display: flex;
+  flex-direction: column;
 }
 
 .advert img {
@@ -102,4 +104,40 @@ body {
 
 #criteres-form h2 {
   margin-bottom: 20px;
+}
+
+#center {
+  position: absolute;
+  top: 20px;
+  left: 40vw;
+}
+
+#save-search {
+  position: absolute;
+  width: 54px;
+  height: 54px;
+  bottom: 10px;
+  left: 10px;
+}
+
+#save-search img {
+  width: 100%;
+}
+
+#email-form {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-radius: 15px;
+  padding: 10px;
+}
+
+#email-form span {
+  margin-right: 15px;
+}
+#email-form button {
+  margin-left: 15px;
 }

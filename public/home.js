@@ -22,9 +22,24 @@ const randomDecalage = () => {
 	let number = Math.random() * (Math.random() > 0.5 ? 1 : -1);
 	return (number * Math.pow(10, -4)) / 2;
 };
-let map;
 
-let markers;
+const arcgisOnline = L.esri.Geocoding.arcgisOnlineProvider({
+	countries: ["FR"],
+});
+
+const houseIcon = L.icon({
+	iconUrl: "./work.png",
+	iconSize: [32, 37],
+	iconAnchor: [16, 37],
+	popupAnchor: [0, -30],
+});
+
+let map = null;
+let routingControl = null;
+let workMarker = null;
+let markers = null;
+let searchData = null;
+const urlParams = new URLSearchParams(window.location.search);
 
 const showMenu = () => {
 	const menuButton = $("#showMenu-btn");
@@ -48,6 +63,10 @@ const clearAdverts = () => {
 	markers.clearLayers();
 };
 
+const setDefaultImg = (e) => {
+	$(e.target).attr("src", DEFAULT_IMAGE);
+};
+
 const createCarousel = (images) => {
 	const carousel = $('<div class="carousel-inner"></div>');
 	const previousBtn = $(
@@ -63,7 +82,6 @@ const createCarousel = (images) => {
 		);
 	}
 	carousel.children().eq(0).addClass("active");
-
 	const container = $(
 		'<div id="carouselControls" class="carousel slide" data-bs-ride="carousel"></div>'
 	)
@@ -88,7 +106,7 @@ const createInfos = (advertInfos) => {
 	return container;
 };
 
-const createAdvertCard = (advert) => {
+const createAdvertCard = (advert, i) => {
 	const topInfos = $(
 		`<div class="advert-header"><div><a href="${
 			advert.url
@@ -98,10 +116,14 @@ const createAdvertCard = (advert) => {
 	);
 	const carousel = createCarousel(advert.images_url);
 	const infos = createInfos(advert);
+	const homeRouting = $(
+		`<div style="align-self: center;"> <a id="${i}" class="btn btn-warning advert-routing">Home</a> </div>`
+	);
 	const main = $('<div class="advert"></div>')
 		.append(topInfos)
 		.append(carousel)
-		.append(infos);
+		.append(infos)
+		.append(homeRouting);
 
 	return $("<div></div>").append(main);
 };
@@ -109,23 +131,24 @@ const createAdvertCard = (advert) => {
 const initAdverts = () => {
 	clearAdverts();
 	let i = 0;
+	let j = 0;
 	let pos = [0, 0];
-	for (let advert of adverts) {
-		if (advert.latitude !== null && advert.longitude !== null) {
+	for (i in adverts) {
+		if (adverts[i].latitude !== null && adverts[i].longitude !== null) {
 			L.marker([
-				advert.latitude + randomDecalage(),
-				advert.longitude + randomDecalage(),
+				adverts[i].latitude + randomDecalage(),
+				adverts[i].longitude + randomDecalage(),
 			])
-				.bindPopup(createAdvertCard(advert).html())
+				.bindPopup(createAdvertCard(adverts[i], i).html())
 				.addTo(markers);
-			pos[0] += advert.latitude;
-			pos[1] += advert.longitude;
-			i++;
+			pos[0] += adverts[i].latitude;
+			pos[1] += adverts[i].longitude;
+			j++;
 		}
 	}
-	pos[0] /= i;
-	pos[1] /= i;
-	map.setView([pos[0], pos[1]], 15);
+	pos[0] /= j;
+	pos[1] /= j;
+	map.setView([pos[0], pos[1] + 0.008], 15);
 };
 
 const testApi = async () => {
@@ -167,12 +190,13 @@ const updateAdverts = (data) => {
 		adverts = res.adverts;
 		console.log(adverts);
 		initAdverts();
+		$(".advert-routing").on("click", routeFromHome);
 	});
 };
 
 const handleFormSubmit = (e) => {
 	e.preventDefault();
-	const inputs = $("input");
+	const inputs = $(".search-input");
 	console.log(inputs);
 	data = {};
 	types = { search_type: [], property_type: [] };
@@ -187,9 +211,96 @@ const handleFormSubmit = (e) => {
 		data["search_type"] = types.search_type[0];
 	if (types.property_type.length === 1)
 		data["property_type"] = types.property_type[0];
-	console.log(data);
-	updateAdverts(data);
+	searchData = data;
+	console.log(searchData);
+	updateAdverts(searchData);
 };
+
+const routeFromHome = (e) => {
+	if (workMarker === null) return;
+	if (routingControl !== null) map.removeControl(routingControl);
+	const button = $(e.target);
+	const id = parseInt(button.attr("id"));
+	const curAdvert = adverts[id];
+
+	routingControl = L.Routing.control({
+		waypoints: [
+			workMarker.getLatLng(),
+			L.latLng(curAdvert.latitude, curAdvert.longitude),
+		],
+	}).addTo(map);
+};
+
+const getData = () => {
+	let work = null;
+	if (workMarker !== null) work = workMarker.getLatLng();
+	const data = {
+		work: work,
+		searchData: searchData,
+	};
+	return btoa(JSON.stringify(data));
+};
+
+const save = (e) => {
+	const input = $(e.target).siblings().eq(1);
+	const email = input.val();
+	const data = getData();
+	sendEmail(email, data);
+};
+
+const sendEmail = (email, data) => {
+	console.log(email, data);
+	const settings = {
+		url: "http://localhost:3000/sendEmail",
+		method: "POST",
+		data: { email: email, data: data },
+	};
+	$.ajax(settings).done((res) => {
+		console.log(res);
+	});
+};
+
+const checkEmail = (e) => {
+	if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(e.target.value)) {
+		$(e.target).css("color", "green");
+		$(e.target).siblings().eq(1).prop("disabled", false);
+	} else {
+		$(e.target).css("color", "red");
+		$(e.target).siblings().eq(1).prop("disabled", true);
+	}
+};
+
+const loadSave = (layer) => {
+	let data = urlParams.get("save");
+	data = JSON.parse(atob(data));
+	console.log(data);
+	if (data.work !== null) {
+		workMarker = L.marker([data.work.lat, data.work.lng], { icon: houseIcon });
+		setWorkMarker(layer, workMarker);
+	}
+	if (data.searchData !== null) {
+		updateAdverts(data.searchData);
+		for (let field in data.searchData){
+			$(`#${field}`).val(data.searchData[field]);
+		}
+		
+		if (data.searchData.property_type) {
+			const inputs = $('.propertyType-check')
+			inputs.each((i) => {inputs[i].checked = false;})
+			$(`#${data.searchData.property_type}`)[0].checked = true;
+		}
+		if (data.searchData.search_type) {
+			const inputs = $('.searchType-check')
+			inputs.each((i) => {inputs[i].checked = false;})
+			$(`#${data.searchData.search_type}`)[0].checked = true;
+		}
+	}
+}
+
+const setWorkMarker = (layer, marker) => {
+	layer.clearLayers();
+	layer.addLayer(marker);
+}
 
 $(document).ready(() => {
 	map = L.map("mapid").setView([ORIGIN.lat, ORIGIN.long], ZOOM_LEVEL);
@@ -198,10 +309,35 @@ $(document).ready(() => {
 	);
 	markers = L.layerGroup().addTo(map);
 
+	let searchControl = L.esri.Geocoding.geosearch({
+		providers: [arcgisOnline],
+	}).addTo(map);
+	
+	let workLayer = L.layerGroup().addTo(map);
+
+	searchControl.on("results", (data) => {
+		workLayer.clearLayers();
+		workMarker = L.marker(data.results[0].latlng, { icon: houseIcon });
+		setWorkMarker(workLayer, workMarker);
+	});
+
+	map.on("popupopen", (e) => {
+		$(".advert-routing").on("click", routeFromHome);
+	});
+
 	$("#center-me").on("click", testApi);
 
 	$("#showMenu-btn").on("click", showMenu);
 	$("#sidebar-btn").on("click", hideMenu);
 
+	$("#postal_codes").on("change", (e) => {
+		if (validPostalCode(parseInt(e.target.value, 10)))
+			$(e.target).css("color", "green");
+		else $(e.target).css("color", "red");
+	});
+
 	$("#criteres-form").on("submit", handleFormSubmit);
+	$("#email").on("input", checkEmail);
+	$("#save-btn").on("click", save);
+	if (urlParams.has("save")) loadSave(workLayer);
 });
